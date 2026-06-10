@@ -2,89 +2,96 @@
 
 Agent skills for common Convex workflows.
 
-## Skills
-
-### `convex-quickstart`
-
-Initialize a new Convex backend from scratch with schema, auth, and basic CRUD operations. Use when starting a new project or adding Convex to an existing app.
+## Install
 
 ```bash
-npx skills add convex/agent-skills --skill convex-quickstart
-```
+# Choose which skills you want
+npx skills add get-convex/agent-skills
 
-### `schema-builder`
-
-Design and generate Convex database schemas with proper validation, indexes, and relationships. Use when creating `schema.ts` or modifying table definitions.
-
-```bash
-npx skills add convex/agent-skills --skill schema-builder
-```
-
-### `function-creator`
-
-Create Convex queries, mutations, and actions with proper validation, authentication, and error handling. Use when implementing new API endpoints.
-
-```bash
-npx skills add convex/agent-skills --skill function-creator
-```
-
-### `auth-setup`
-
-Set up Convex authentication with proper user management, identity mapping, and access control patterns. Use when implementing auth flows.
-
-```bash
-npx skills add convex/agent-skills --skill auth-setup
-```
-
-### `migration-helper`
-
-Plan and execute Convex schema migrations safely, including adding fields, creating tables, and data transformations. Use when schema changes affect existing data.
-
-```bash
-npx skills add convex/agent-skills --skill migration-helper
-```
-
-### `components-guide`
-
-Guide to using Convex components for feature encapsulation. Learn about sibling components, creating your own, and when to use components vs monolithic code.
-
-```bash
-npx skills add convex/agent-skills --skill components-guide
-```
-
-### `convex-helpers-guide`
-
-Discover and use `convex-helpers` utilities for relationships, filtering, sessions, custom functions, and more. Use when you need pre-built Convex patterns.
-
-```bash
-npx skills add convex/agent-skills --skill convex-helpers-guide
-```
-
-## Installation
-
-```bash
-# Install a specific skill
-npx skills add convex/agent-skills --skill convex-quickstart
-
-# Or install everything
-npx skills add convex/agent-skills
+# OR Install all skills
+npx skills add get-convex/agent-skills --all
 ```
 
 ## Usage
 
-Invoke skills via slash commands:
+Skills are applied automatically when the agent determines they're relevant. How
+you manually invoke them depends on your tool:
+
+| Tool                     | Manual invocation |
+| ------------------------ | ----------------- |
+| Cursor                   | `/skill-name`     |
+| VS Code (GitHub Copilot) | `/skill-name`     |
+| Claude Code              | `/skill-name`     |
+| Windsurf                 | `@skill-name`     |
+| Codex (OpenAI)           | `$skill-name`     |
+
+For example, to kick off auth setup in Cursor or Claude Code:
 
 ```
-/convex-quickstart
-/schema-builder
-/function-creator
-/auth-setup
-/migration-helper
-/components-guide
-/convex-helpers-guide
+/convex-setup-auth
 ```
+
+In Windsurf:
+
+```
+@convex-setup-auth
+```
+
+## Skill Philosophy
+
+Skills in this repo should be laser-focused on a specific task or workflow.
+
+A good skill helps an agent take action, for example:
+
+- set up authentication
+- create a component
+- perform a migration
+- diagnose performance issues
+
+A skill should not exist just to provide generic background information. If content is mostly reference material, it should usually live in documentation, not as a standalone skill.
+
+Reference material is still useful inside a skill, but only when it helps the agent complete a concrete task.
 
 ## Contributing
+
+Before contributing, review the core Agent Skills docs:
+
+- [Overview](https://agentskills.io/home)
+- [What are skills?](https://agentskills.io/what-are-skills)
+- [Specification](https://agentskills.io/specification)
+- [Optimizing skill descriptions](https://agentskills.io/skill-creation/optimizing-descriptions)
+- [Evaluating skill output quality](https://agentskills.io/skill-creation/evaluating-skills)
+
+If your skill bundles scripts, also read [Using scripts in skills](https://agentskills.io/skill-creation/using-scripts).
+
+### Validating Skills
+
+Validate skills by trying to use them in a realistic temp project, not just by reading them.
+
+- Push the skill as far as possible with an agent in a throwaway directory
+- If a human must intervene, ask explicitly for the exact action needed and then continue
+- Record what worked, where the agent got stuck, and what confused the flow
+- Feed those learnings back into the skill so the next run is better
+- For UI-facing skills such as auth setup, validate the actual browser flow during skill development, not just code generation or a successful build
+
+### Testing with Anthropic's Skill Creator
+
+For a more rigorous approach, use Anthropic's [skill-creator](https://github.com/anthropics/skills/tree/main/skills/skill-creator) skill. It provides a structured loop for testing and iterating on skills:
+
+1. Draft or edit a skill
+2. Define realistic test prompts and run the skill against them (with and without the skill as a baseline)
+3. Grade the outputs with assertions and review them in a browser-based viewer
+4. Improve the skill based on feedback, then repeat
+
+It also includes a description optimizer that tunes the skill's frontmatter description for better triggering accuracy across different phrasings.
+
+Install it in Claude Code:
+
+```bash
+/install-skill https://github.com/anthropics/skills/tree/main/skills/skill-creator
+```
+
+This is especially useful when a skill is complex enough that reading it alone won't tell you if it actually works well in practice.
 
 Each skill follows the [Agent Skills open standard](https://github.com/anthropics/skills):
 
@@ -98,3 +105,4 @@ Each skill follows the [Agent Skills open standard](https://github.com/anthropic
    ```
 3. Include comprehensive examples with bad/good patterns
 4. Add a checklist at the end of each skill
+5. Update this root `README.md` whenever skills are added, removed, renamed, or substantially repositioned
